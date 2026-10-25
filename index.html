@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Landfall</title>
+<meta name="description" content="Find the mystery country in five guesses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">Land<b>fall</b></div>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <section>
+    <div class="eyebrow" style="margin-bottom:8px">Clues · one unlocks with each miss</div>
+    <div class="clues" id="clues"></div>
+  </section>
+
+  <section class="board">
+    <div class="heads"><span>Continent</span><span>Hemi</span><span>Pop.</span><span>Area</span><span>Lang.</span><span>Distance</span></div>
+    <div id="rows" class="board"></div>
+  </section>
+
+  <div class="entry" id="entry">
+    <ul class="sugg" id="sugg" role="listbox" hidden></ul>
+    <form id="form" autocomplete="off">
+      <input id="guess" placeholder="Guess a country" aria-label="Guess a country" aria-autocomplete="list" aria-controls="sugg" spellcheck="false">
+      <button type="submit" id="go">Guess</button>
+    </form>
+  </div>
+  <div class="msg" id="msg" role="status"></div>
+
+  <div class="result" id="result" hidden></div>
+  <div class="stats" id="stats"></div>
+
+  <div class="how">
+    <p><b>How to play.</b> Find today's mystery country in five guesses. Every guess shows how it compares to the answer, and every miss unlocks a new clue.</p>
+    <div class="legend"><span><i style="background:var(--hit)"></i>Match</span><span><i style="background:var(--near)"></i>Close</span><span><i style="background:var(--miss)"></i>Off</span></div>
+    <p>Arrows on population and area point toward the answer: ↑ means the mystery country is bigger. Population and area count as close within 1.5×. Distance runs capital to capital, and the arrow points toward the answer. Language turns green if the two countries share an official or main language.</p>
+  </div>
+</div>
+<script type="module" src="src/game.js"></script>
+</body>
+</html>
