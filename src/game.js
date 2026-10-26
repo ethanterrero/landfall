@@ -1,8 +1,8 @@
-import { C, ALIASES, POOL } from './data.js';
+import { C, POOL } from './data.js';
 
 
 const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/\bst\.?\s/g,"saint ").replace(/&/g,"and").replace(/^the\s+/,"").replace(/[^a-z0-9]/g,"");
-const IDX=new Map(); C.forEach((c,i)=>{ IDX.set(norm(c.name),i); (ALIASES[c.name]||[]).forEach(a=>IDX.set(norm(a),i)); });
+const IDX=new Map(); C.forEach((c,i)=>{ IDX.set(norm(c.name),i); c.aliases.forEach(a=>{ const k=norm(a); if(k && !IDX.has(k)) IDX.set(k,i); }); });
 
 // ---------- geometry ----------
 const rad=d=>d*Math.PI/180;
@@ -38,7 +38,7 @@ function answerFor(n){ // deterministic shuffle of the pool, cycling
   const len=POOL.length, k=((n-1)%len+len)%len, order=POOL.map((_,i)=>i);
   let s=20261025; const R=()=>{ s=(s*1103515245+12345)&0x7fffffff; return s/0x7fffffff; };
   for(let i=len-1;i>0;i--){ const j=Math.floor(R()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
-  return C.findIndex(c=>c.name===POOL[order[k]]);
+  return C.findIndex(c=>c.iso===POOL[order[k]]);
 }
 const KEY="landfall:v1";
 const load=()=>{ try{ return JSON.parse(localStorage.getItem(KEY))||{days:{}}; }catch(e){ return {days:{}}; } };
@@ -68,7 +68,7 @@ function guess(q){
 }
 
 // ---------- render ----------
-const fmtPop=k=>k>=1000?(Math.round(k/100)/10)+"M":Math.round(k)+"K";
+const fmtPop=n=>n>=1e9?(Math.round(n/1e8)/10)+"B":n>=1e6?(Math.round(n/1e5)/10)+"M":n>=1e3?Math.round(n/1e3)+"K":String(n);
 function render(fresh){
   const a=C[S.ans], misses=S.guesses.filter(g=>g!==S.ans).length, done=S.status!=="playing";
   $("meta").textContent=S.mode==="daily"?`#${S.n} · ${S.guesses.length}/${MAXG}`:`Practice · ${S.guesses.length}/${MAXG}`;
@@ -109,7 +109,7 @@ function shareText(){
 }
 function wire(){
   $("copy").onclick=async()=>{ try{ await navigator.clipboard.writeText(shareText()); $("copy").textContent="Copied"; }catch(e){ const r=document.createRange(); r.selectNodeContents($("share")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); $("copy").textContent="Selected, now copy it"; } };
-  $("practice").onclick=()=>{ let i; do{ i=C.findIndex(c=>c.name===POOL[Math.floor(Math.random()*POOL.length)]); }while(i===S.ans); start("practice",0,i); };
+  $("practice").onclick=()=>{ let i; do{ i=C.findIndex(c=>c.iso===POOL[Math.floor(Math.random()*POOL.length)]); }while(i===S.ans); start("practice",0,i); };
   if($("daily")) $("daily").onclick=()=>start("daily",dayNum());
 }
 function renderStats(){
@@ -125,7 +125,7 @@ let sel=-1, opts=[];
 function showSugg(){
   const k=norm($("guess").value); const ul=$("sugg");
   if(!k){ hideSugg(); return; }
-  opts=C.map((c,i)=>i).filter(i=>norm(C[i].name).includes(k)||(ALIASES[C[i].name]||[]).some(a=>norm(a).startsWith(k)))
+  opts=C.map((c,i)=>i).filter(i=>norm(C[i].name).includes(k)||C[i].aliases.some(a=>norm(a).startsWith(k)))
     .sort((x,y)=>(norm(C[y].name).startsWith(k))-(norm(C[x].name).startsWith(k))||C[x].name.localeCompare(C[y].name)).slice(0,7);
   if(!opts.length){ hideSugg(); return; }
   sel=Math.min(sel,opts.length-1);

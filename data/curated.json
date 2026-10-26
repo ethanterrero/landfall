@@ -1,0 +1,224 @@
+{
+  "_readme": "Hand-maintained inputs for scripts/build-data.mjs. Everything else in src/data.js is generated from sourced datasets.",
+  "include_non_un": [
+    "VA",
+    "TW"
+  ],
+  "answer_pool": [
+    "LA",
+    "EC",
+    "KE",
+    "GH",
+    "CL",
+    "PT",
+    "MA",
+    "MN",
+    "NP",
+    "KH",
+    "BO",
+    "HR",
+    "FI",
+    "SN",
+    "PE",
+    "MG",
+    "JO",
+    "KZ",
+    "LK",
+    "CU",
+    "HU",
+    "TZ",
+    "UY",
+    "OM",
+    "MY",
+    "NA",
+    "GR",
+    "GT",
+    "UZ",
+    "IE",
+    "ET",
+    "PY",
+    "VN",
+    "IS",
+    "ZM",
+    "GE",
+    "TN",
+    "CR",
+    "BD",
+    "PL",
+    "AO",
+    "NZ",
+    "JM",
+    "MM",
+    "RO",
+    "CO",
+    "BW",
+    "IQ",
+    "CH",
+    "PH",
+    "CM",
+    "PA",
+    "NO",
+    "AM",
+    "MZ",
+    "VE",
+    "TH",
+    "BE",
+    "UG",
+    "AT",
+    "PG",
+    "HN",
+    "DZ",
+    "AZ",
+    "DK",
+    "FJ",
+    "AR",
+    "UA",
+    "PK",
+    "EG"
+  ],
+  "aliases": {
+    "US": [
+      "usa",
+      "us",
+      "america",
+      "united states of america"
+    ],
+    "GB": [
+      "uk",
+      "britain",
+      "great britain",
+      "england"
+    ],
+    "CD": [
+      "drc",
+      "democratic republic of the congo",
+      "congo kinshasa"
+    ],
+    "CG": [
+      "congo",
+      "congo brazzaville"
+    ],
+    "CI": [
+      "cote divoire"
+    ],
+    "CZ": [
+      "czechia"
+    ],
+    "MM": [
+      "burma"
+    ],
+    "SZ": [
+      "swaziland"
+    ],
+    "CV": [
+      "cabo verde"
+    ],
+    "TL": [
+      "east timor"
+    ],
+    "VA": [
+      "vatican",
+      "holy see"
+    ],
+    "AE": [
+      "uae"
+    ],
+    "TR": [
+      "turkey",
+      "turkiye"
+    ],
+    "KR": [
+      "korea"
+    ],
+    "KP": [
+      "dprk"
+    ],
+    "BA": [
+      "bosnia"
+    ],
+    "MK": [
+      "macedonia"
+    ],
+    "GM": [
+      "the gambia"
+    ],
+    "NL": [
+      "holland"
+    ],
+    "ST": [
+      "sao tome"
+    ]
+  },
+  "overrides": {
+    "TW": {
+      "population": 23400000,
+      "_source": "Taiwan Ministry of the Interior, 2024 household registration (World Bank does not cover Taiwan)"
+    },
+    "VA": {
+      "population": 764,
+      "_source": "Holy See Press Office, 2023 (World Bank does not cover Vatican City)"
+    },
+    "SS": {
+      "capital": {
+        "name": "Juba",
+        "lat": 4.859,
+        "lng": 31.571
+      },
+      "_source": "Natural Earth 10m has no capital point for South Sudan; coordinates of Juba"
+    },
+    "NR": {
+      "capital": {
+        "name": "Yaren",
+        "lat": -0.547,
+        "lng": 166.921
+      },
+      "_source": "Nauru has no official capital; Natural Earth omits it. Yaren District, seat of government"
+    },
+    "TZ": {
+      "capital": {
+        "name": "Dodoma",
+        "lat": -6.163,
+        "lng": 35.752
+      },
+      "_source": "Natural Earth marks Dar es Salaam; Dodoma is the official capital"
+    },
+    "BI": {
+      "capital": {
+        "name": "Gitega",
+        "lat": -3.427,
+        "lng": 29.925
+      },
+      "_source": "Natural Earth marks Bujumbura; Gitega has been the political capital since 2019"
+    },
+    "BJ": {
+      "capital": {
+        "name": "Porto-Novo",
+        "lat": 6.497,
+        "lng": 2.605
+      },
+      "_source": "Natural Earth marks Cotonou (seat of government); Porto-Novo is the official capital"
+    },
+    "RU": {
+      "continent": "Europe",
+      "_source": "countries-list puts Russia in Asia; capital and most people are in Europe"
+    },
+    "TL": {
+      "continent": "Asia",
+      "_source": "countries-list puts Timor-Leste in Oceania; UN geoscheme and mledoze place it in South-Eastern Asia"
+    },
+    "MN": {
+      "capitalName": "Ulaanbaatar",
+      "_source": "mledoze spells it Ulan Bator"
+    }
+  },
+  "capital_spelling_ok": [
+    "AD",
+    "DK",
+    "SZ",
+    "GD",
+    "KI",
+    "SM",
+    "PW",
+    "MN"
+  ]
+}

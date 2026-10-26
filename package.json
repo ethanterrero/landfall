@@ -1,0 +1,14 @@
+{
+  "name": "landfall",
+  "private": true,
+  "type": "module",
+  "description": "Daily country-guessing game.",
+  "scripts": {
+    "build:data": "node scripts/build-data.mjs",
+    "serve": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "countries-list": "3.4.1",
+    "world-countries": "5.1.0"
+  }
+}
