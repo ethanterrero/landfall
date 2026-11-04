@@ -40,7 +40,7 @@ function answerFor(n){ // deterministic shuffle of the pool, cycling
   for(let i=len-1;i>0;i--){ const j=Math.floor(R()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
   return C.findIndex(c=>c.iso===POOL[order[k]]);
 }
-const KEY="landfall:v1";
+const KEY="landle:v1";
 const load=()=>{ try{ return JSON.parse(localStorage.getItem(KEY))||{days:{}}; }catch(e){ return {days:{}}; } };
 const save=d=>{ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} };
 
@@ -96,16 +96,16 @@ const shortArea=v=>v>=1e6?(Math.round(v/1e5)/10)+"M km²":v>=1000?Math.round(v/1
 
 function resultHTML(){
   const a=C[S.ans], won=S.status==="won", n=S.guesses.length;
-  const head=won?(["","Landfall in one","Sharp eyes","Right on course","Close call","Last-gasp landing"][n]):`It was ${a.name}`;
+  const head=won?(["","First-try landing","Sharp eyes","Right on course","Close call","Last-gasp landing"][n]):`It was ${a.name}`;
   return `<h2 class="${won?"win":"lose"}">${head}</h2>
     <p class="facts">${flag(a.iso)} ${a.name} · ${a.sub} · capital ${a.cap} · ${fmtPop(a.pop)} people · ${shortArea(a.area)}</p>
     <pre class="share" id="share">${shareText()}</pre>
     <div class="row"><button type="button" id="copy">Copy result</button><button type="button" class="ghost" id="practice">Practice round</button>${S.mode!=="daily"?'<button type="button" class="ghost" id="daily">Back to today</button>':""}</div>`;
 }
 function shareText(){
-  const a=C[S.ans], tag=S.mode==="daily"?`Landfall #${S.n}`:"Landfall (practice)";
+  const a=C[S.ans], tag=S.mode==="daily"?`Landle #${S.n}`:"Landle (practice)";
   const lines=S.guesses.map(gi=>{ const r=compare(C[gi],a); return r.win?"🟩🟩🟩🟩🟩 🎯":r.cells.slice(0,5).map(c=>c.e).join("")+" "+ARROW_EMOJI[r.d]; });
-  return `${tag} ${S.status==="won"?S.guesses.length:"X"}/${MAXG}\n${lines.join("\n")}`;
+  return `${tag} ${S.status==="won"?S.guesses.length:"X"}/${MAXG}\n${lines.join("\n")}\nlandle.io`;
 }
 function wire(){
   $("copy").onclick=async()=>{ try{ await navigator.clipboard.writeText(shareText()); $("copy").textContent="Copied"; }catch(e){ const r=document.createRange(); r.selectNodeContents($("share")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); $("copy").textContent="Selected, now copy it"; } };

@@ -1,4 +1,4 @@
-# Landfall
+# Landle
 
 A daily country-guessing game. Find the mystery country in five guesses.
 
@@ -39,7 +39,7 @@ scripts/build-data.mjs  builds src/data.js from the sources below
 ```
 
 - **Daily answer:** deterministic shuffle of `POOL` keyed by days since 2026-10-25, so everyone gets the same country.
-- **Stats:** saved in `localStorage` under `landfall:v1`.
+- **Stats:** saved in `localStorage` under `landle:v1`.
 
 ## Data
 
