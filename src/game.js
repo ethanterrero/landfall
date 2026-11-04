@@ -63,7 +63,7 @@ function guess(q){
   S.guesses.push(i); $("guess").value=""; hideSugg();
   if(i===S.ans) S.status="won"; else if(S.guesses.length>=MAXG) S.status="lost";
   say(S.status==="playing"?`Not ${C[i].name}. New clue unlocked.`:"");
-  if(S.status!=="playing" && S.mode==="daily"){ const d=load(); d.days[S.n]={g:S.guesses,status:S.status}; save(d); }
+  if(S.mode==="daily"){ const d=load(); d.days[S.n]={g:S.guesses,status:S.status}; save(d); }
   render(false);
 }
 
@@ -80,7 +80,7 @@ function render(fresh){
 
   let html="";
   S.guesses.forEach((gi,k)=>{ const g=C[gi], r=compare(g,a), isNew=!fresh&&k===S.guesses.length-1;
-    const labels = r.win ? [a.cont,a.lat>=0?"N":"S",fmtPop(a.pop),"✓",a.langs[0],"🎯 0 km"] :
+    const labels = r.win ? [a.cont,a.lat>=0?"N":"S",fmtPop(a.pop),shortArea(a.area),a.langs[0],"🎯 0 km"] :
       [g.cont, g.lat>=0?"N":"S", `<span class="big">${r.cells[2].arrow}</span>${fmtPop(g.pop)}`, `<span class="big">${r.cells[3].arrow}</span>${shortArea(g.area)}`, r.cells[4].cls?"Shared":"No match", `<span class="big">${ARROWS[r.d]}</span>${Math.round(r.km).toLocaleString()} km`];
     html+=`<div class="grow${isNew?" new":""}"><div class="gname">${g.name}<small>${k+1}</small></div><div class="tiles">${r.cells.map((c,j)=>`<div class="tile ${c.cls}">${labels[j]}</div>`).join("")}</div></div>`; });
   for(let k=S.guesses.length;k<MAXG && !done;k++) html+=`<div class="grow"><div class="tiles">${Array(6).fill('<div class="tile empty"></div>').join("")}</div></div>`;
@@ -113,9 +113,9 @@ function wire(){
   if($("daily")) $("daily").onclick=()=>start("daily",dayNum());
 }
 function renderStats(){
-  const days=load().days, keys=Object.keys(days).map(Number); if(!keys.length){ $("stats").innerHTML=""; return; }
+  const days=load().days, keys=Object.keys(days).map(Number).filter(k=>days[k].status!=="playing"); if(!keys.length){ $("stats").innerHTML=""; return; }
   const wins=keys.filter(k=>days[k].status==="won");
-  let streak=0,d=dayNum(); if(!days[d]) d--; while(days[d]&&days[d].status==="won"){ streak++; d--; }
+  let streak=0,d=dayNum(); if(!days[d]||days[d].status==="playing") d--; while(days[d]&&days[d].status==="won"){ streak++; d--; }
   const avg=wins.length?(wins.reduce((s,k)=>s+days[k].g.length,0)/wins.length).toFixed(1):"–";
   $("stats").innerHTML=`<div><b>${keys.length}</b>played</div><div><b>${Math.round(wins.length/keys.length*100)}%</b>found</div><div><b>${streak}</b>streak</div><div><b>${avg}</b>avg guesses</div>`;
 }
