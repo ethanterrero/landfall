@@ -145,3 +145,9 @@ $("guess").addEventListener("blur",()=>setTimeout(hideSugg,120));
 $("form").addEventListener("submit",e=>{ e.preventDefault(); if(sel>=0&&opts[sel]!==undefined){ guess(C[opts[sel]].name); return; } const v=$("guess").value.trim(); if(v) guess(v); });
 
 start("daily",dayNum());
+
+// ---------- start screen ----------
+const today=load().days[dayNum()];
+$("play").textContent=!today?"Play":today.status==="playing"?"Continue":"See today's result";
+$("today").textContent=`No. ${dayNum()} · ${new Date().toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"})}`;
+$("play").onclick=()=>{ $("splash").hidden=true; $("game").hidden=false; if(S.status==="playing") $("guess").focus(); };
