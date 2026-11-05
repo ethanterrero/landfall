@@ -117,7 +117,9 @@ async function main() {
     let cap = o.capital ?? pickCapital(c, capitals.get(c.cca3), warn, curated.capital_spelling_ok);
     if (!cap) { warn(`${iso}: no Natural Earth capital; falling back to country centroid`); cap = { lat: c.latlng[0], lng: c.latlng[1] }; }
 
-    const langs = cl.languages.map(l => langNames[l]?.name ?? l);
+    const langCodes = o.languages ?? cl.languages;
+    if (o.languages && [...cl.languages].sort().join() !== [...o.languages].sort().join()) fail(`${iso}: languages override must reorder countries-list's languages (${cl.languages.join(',')}), not change them`);
+    const langs = langCodes.map(l => langNames[l]?.name ?? l);
     if (!langs.length) fail(`${iso}: no languages`);
 
     // Alt spellings help matching, but skip short codes ("KE") and long official forms nobody types.
@@ -134,7 +136,7 @@ async function main() {
       area: c.area,
       pop,
       langs: langs.slice(0, 4),
-      langCodes: cl.languages,
+      langCodes,
       landlocked: c.landlocked,
       aliases,
     });
@@ -142,7 +144,8 @@ async function main() {
 
   // Validation
   const byIso = new Map(out.map(c => [c.iso, c]));
-  for (const iso of curated.answer_pool) if (!byIso.has(iso)) fail(`answer_pool: ${iso} is not in the country list`);
+  const pool = curated.answer_pool === 'all' ? out.map(c => c.iso) : curated.answer_pool;
+  for (const iso of pool) if (!byIso.has(iso)) fail(`answer_pool: ${iso} is not in the country list`);
   for (const iso of Object.keys(curated.aliases)) if (!byIso.has(iso)) fail(`aliases: ${iso} is not in the country list`);
   const seen = new Map();
   for (const c of out) for (const key of [c.name, ...c.aliases].map(norm)) {
@@ -163,12 +166,12 @@ async function main() {
 // year ${popYears.join('/')} (CC BY 4.0); Natural Earth populated places (public domain).
 // ${out.length} countries.
 `;
-  const body = `export const C = ${JSON.stringify(out)};\n\nexport const POOL = ${JSON.stringify(curated.answer_pool)};\n`;
+  const body = `export const C = ${JSON.stringify(out)};\n\nexport const POOL = ${JSON.stringify(pool)};\n`;
   await writeFile(path.join(ROOT, 'src/data.js'), header + '\n' + body);
 
   for (const w of warnings) console.warn('  warn:', w);
   if (errors.length) { for (const e of errors) console.error('  error:', e); process.exit(1); }
-  console.log(`  wrote ${out.length} countries, ${curated.answer_pool.length} in the answer pool, ${warnings.length} warnings`);
+  console.log(`  wrote ${out.length} countries, ${pool.length} in the answer pool, ${warnings.length} warnings`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

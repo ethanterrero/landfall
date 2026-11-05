@@ -4,78 +4,7 @@
     "VA",
     "TW"
   ],
-  "answer_pool": [
-    "LA",
-    "EC",
-    "KE",
-    "GH",
-    "CL",
-    "PT",
-    "MA",
-    "MN",
-    "NP",
-    "KH",
-    "BO",
-    "HR",
-    "FI",
-    "SN",
-    "PE",
-    "MG",
-    "JO",
-    "KZ",
-    "LK",
-    "CU",
-    "HU",
-    "TZ",
-    "UY",
-    "OM",
-    "MY",
-    "NA",
-    "GR",
-    "GT",
-    "UZ",
-    "IE",
-    "ET",
-    "PY",
-    "VN",
-    "IS",
-    "ZM",
-    "GE",
-    "TN",
-    "CR",
-    "BD",
-    "PL",
-    "AO",
-    "NZ",
-    "JM",
-    "MM",
-    "RO",
-    "CO",
-    "BW",
-    "IQ",
-    "CH",
-    "PH",
-    "CM",
-    "PA",
-    "NO",
-    "AM",
-    "MZ",
-    "VE",
-    "TH",
-    "BE",
-    "UG",
-    "AT",
-    "PG",
-    "HN",
-    "DZ",
-    "AZ",
-    "DK",
-    "FJ",
-    "AR",
-    "UA",
-    "PK",
-    "EG"
-  ],
+  "answer_pool": "all",
   "aliases": {
     "US": [
       "usa",
@@ -172,7 +101,11 @@
         "lat": -0.547,
         "lng": 166.921
       },
-      "_source": "Nauru has no official capital; Natural Earth omits it. Yaren District, seat of government"
+      "languages": [
+        "na",
+        "en"
+      ],
+      "_source": "Nauru has no official capital; Natural Earth omits it. Yaren District, seat of government; countries-list lists English first; Nauruan is the national language"
     },
     "TZ": {
       "capital": {
@@ -209,6 +142,84 @@
     "MN": {
       "capitalName": "Ulaanbaatar",
       "_source": "mledoze spells it Ulan Bator"
+    },
+    "BW": {
+      "languages": [
+        "tn",
+        "en"
+      ],
+      "_source": "countries-list lists English first; Tswana is the national language and spoken by most people"
+    },
+    "CM": {
+      "languages": [
+        "fr",
+        "en"
+      ],
+      "_source": "countries-list lists English first; French is the majority official language"
+    },
+    "SZ": {
+      "languages": [
+        "ss",
+        "en"
+      ],
+      "_source": "countries-list lists English first; Swati is the national language"
+    },
+    "KE": {
+      "languages": [
+        "sw",
+        "en"
+      ],
+      "_source": "countries-list lists English first; Swahili is the national language"
+    },
+    "LS": {
+      "languages": [
+        "st",
+        "en"
+      ],
+      "_source": "countries-list lists English first; Sesotho is the national language"
+    },
+    "MW": {
+      "languages": [
+        "ny",
+        "en"
+      ],
+      "_source": "countries-list lists English first; Chichewa is the national language"
+    },
+    "MH": {
+      "languages": [
+        "mh",
+        "en"
+      ],
+      "_source": "countries-list lists English first; Marshallese is the main spoken language"
+    },
+    "PK": {
+      "languages": [
+        "ur",
+        "en"
+      ],
+      "_source": "countries-list lists English first; Urdu is the national language"
+    },
+    "PH": {
+      "languages": [
+        "tl",
+        "en"
+      ],
+      "_source": "countries-list lists English first; Filipino is the national language"
+    },
+    "TO": {
+      "languages": [
+        "to",
+        "en"
+      ],
+      "_source": "countries-list lists English first; Tongan is the main spoken language"
+    },
+    "ZW": {
+      "languages": [
+        "sn",
+        "en",
+        "nd"
+      ],
+      "_source": "countries-list lists English first; Shona is spoken by most people"
     }
   },
   "capital_spelling_ok": [
