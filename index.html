@@ -3,13 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Landle</title>
-<meta name="description" content="Find the mystery country in five guesses.">
-<link rel="canonical" href="https://landle.io/">
+<title>Landle: Daily Country Guessing Game</title>
+<meta name="description" content="Guess the mystery country in five tries. A free daily geography game: compare continent, population, area, language and distance, unlock clues with every miss, and pick Easy, Normal or Hard.">
+<link rel="canonical" href="https://www.landle.io/">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0E7C86">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://landle.io/">
-<meta property="og:title" content="Landle">
-<meta property="og:description" content="Find the mystery country in five guesses.">
+<meta property="og:site_name" content="Landle">
+<meta property="og:url" content="https://www.landle.io/">
+<meta property="og:title" content="Landle: Daily Country Guessing Game">
+<meta property="og:description" content="Guess the mystery country in five tries. A new country every day.">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Landle",
+  "url": "https://www.landle.io/",
+  "description": "A free daily country guessing game. Guess the mystery country in five tries using continent, population, area, language and distance clues.",
+  "applicationCategory": "GameApplication",
+  "genre": "Geography puzzle",
+  "operatingSystem": "Any",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="styles.css">
@@ -19,17 +37,24 @@
   <div class="mark" aria-hidden="true"><i class="hit"></i><i class="near"></i><i></i></div>
   <h1 class="logo">Land<b>le</b></h1>
   <p class="tagline">Find the mystery country in five guesses.</p>
+  <fieldset class="levels" id="levels">
+    <legend class="eyebrow">Level</legend>
+    <label><input type="radio" name="level" value="easy"><span>Easy</span></label>
+    <label><input type="radio" name="level" value="normal"><span>Normal</span></label>
+    <label><input type="radio" name="level" value="hard"><span>Hard</span></label>
+  </fieldset>
+  <p class="level-about" id="level-about"></p>
   <button type="button" class="play" id="play">Play</button>
   <p class="today" id="today"></p>
 </main>
 <div class="wrap" id="game" hidden>
   <header>
-    <div class="logo">Land<b>le</b></div>
+    <button type="button" class="logo home" id="home" aria-label="Back to start, change level">Land<b>le</b></button>
     <div class="meta" id="meta"></div>
   </header>
 
-  <section>
-    <div class="eyebrow" style="margin-bottom:8px">Clues · one unlocks with each miss</div>
+  <section id="clue-box">
+    <div class="eyebrow" id="clue-head" style="margin-bottom:8px">Clues · one unlocks with each miss</div>
     <div class="clues" id="clues"></div>
   </section>
 

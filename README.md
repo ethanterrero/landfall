@@ -15,6 +15,8 @@ Every guess returns a row of comparison tiles against the answer:
 
 Each miss unlocks a clue: region → language → capital → flag and first letter.
 
+Players pick a level on the start screen (`LEVELS` in `src/game.js`): **Easy** shows the region before the first guess, **Normal** unlocks one clue per miss, **Hard** has no clues. Everyone gets the same daily country; a day's game keeps the level it was started on, and the share text names the level.
+
 ## Run it
 
 No build step. Serve the folder with any static server:

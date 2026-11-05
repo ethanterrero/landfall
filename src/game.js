@@ -33,6 +33,12 @@ function compare(g,a){
 
 // ---------- state ----------
 const EPOCH=new Date(2026,9,25), MAXG=5;
+// free: clues open before the first guess; clues: how many of the four clues the level shows at all
+const LEVELS={
+  easy:  {name:"Easy",   free:1, clues:4, about:"The region shows from the start, then a new clue with each miss."},
+  normal:{name:"Normal", free:0, clues:4, about:"A new clue unlocks with each miss."},
+  hard:  {name:"Hard",   free:0, clues:0, about:"No clues. Just the comparison tiles."}
+};
 const dayNum=()=>{ const t=new Date(); return Math.round((new Date(t.getFullYear(),t.getMonth(),t.getDate())-EPOCH)/864e5)+1; };
 function answerFor(n){ // deterministic shuffle of the pool, cycling
   const len=POOL.length, k=((n-1)%len+len)%len, order=POOL.map((_,i)=>i);
@@ -47,9 +53,11 @@ const save=d=>{ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} };
 let S;
 const $=id=>document.getElementById(id);
 
+const level=()=>LEVELS[load().level]?load().level:"normal";
+
 function start(mode,n,ans){
-  S={mode,n,ans:ans??answerFor(n),guesses:[],status:"playing"};
-  if(mode==="daily"){ const sv=load().days[n]; if(sv){ S.guesses=sv.g; S.status=sv.status; } }
+  S={mode,n,ans:ans??answerFor(n),guesses:[],status:"playing",lv:level()};
+  if(mode==="daily"){ const sv=load().days[n]; if(sv){ S.guesses=sv.g; S.status=sv.status; S.lv=sv.lv??"normal"; } } // games saved before levels were Normal
   say(""); render(true);
 }
 function say(t,err){ const m=$("msg"); m.textContent=t; m.className="msg"+(err?" err":""); }
@@ -62,21 +70,24 @@ function guess(q){
   if(S.guesses.includes(i)){ say(`You already guessed ${C[i].name}.`,true); return; }
   S.guesses.push(i); $("guess").value=""; hideSugg();
   if(i===S.ans) S.status="won"; else if(S.guesses.length>=MAXG) S.status="lost";
-  say(S.status==="playing"?`Not ${C[i].name}. New clue unlocked.`:"");
-  if(S.mode==="daily"){ const d=load(); d.days[S.n]={g:S.guesses,status:S.status}; save(d); }
+  const L=LEVELS[S.lv], unlocked=S.guesses.length+L.free<=L.clues;
+  say(S.status==="playing"?`Not ${C[i].name}.${unlocked?" New clue unlocked.":""}`:"");
+  if(S.mode==="daily"){ const d=load(); d.days[S.n]={g:S.guesses,status:S.status,lv:S.lv}; save(d); }
   render(false);
 }
 
 // ---------- render ----------
 const fmtPop=n=>n>=1e9?(Math.round(n/1e8)/10)+"B":n>=1e6?(Math.round(n/1e5)/10)+"M":n>=1e3?Math.round(n/1e3)+"K":String(n);
 function render(fresh){
-  const a=C[S.ans], misses=S.guesses.filter(g=>g!==S.ans).length, done=S.status!=="playing";
-  $("meta").textContent=S.mode==="daily"?`#${S.n} · ${S.guesses.length}/${MAXG}`:`Practice · ${S.guesses.length}/${MAXG}`;
+  const a=C[S.ans], L=LEVELS[S.lv], misses=S.guesses.filter(g=>g!==S.ans).length+L.free, done=S.status!=="playing";
+  $("meta").textContent=`${S.mode==="daily"?`#${S.n}`:"Practice"} · ${L.name} · ${S.guesses.length}/${MAXG}`;
 
-  const clues=[["Region",a.sub],["Language",a.langs.join(", ")],["Capital",a.cap],["Flag & letter",`<span class="flag">${flag(a.iso)}</span> starts with ${a.name[0]}`]];
+  const clues=[["Region",a.sub],["Language",a.langs.join(", ")],["Capital",a.cap],["Flag & letter",`<span class="flag">${flag(a.iso)}</span> starts with ${a.name[0]}`]].slice(0,L.clues);
+  $("clue-box").hidden=!clues.length;
+  $("clue-head").textContent=L.free?"Clues · one free, then one with each miss":"Clues · one unlocks with each miss";
   $("clues").innerHTML=clues.map(([label,val],k)=>{ const open=k<misses||done;
     const fresh2=!fresh && open && k===misses-1 && !done;
-    return `<div class="clue ${open?"open":"locked"}${fresh2?" fresh":""}"><span class="eyebrow">${label}</span><span class="v">${open?val:`After miss ${k+1}`}</span></div>`; }).join("");
+    return `<div class="clue ${open?"open":"locked"}${fresh2?" fresh":""}"><span class="eyebrow">${label}</span><span class="v">${open?val:`After miss ${k+1-L.free}`}</span></div>`; }).join("");
 
   let html="";
   S.guesses.forEach((gi,k)=>{ const g=C[gi], r=compare(g,a), isNew=!fresh&&k===S.guesses.length-1;
@@ -105,11 +116,11 @@ function resultHTML(){
 function shareText(){
   const a=C[S.ans], tag=S.mode==="daily"?`Landle #${S.n}`:"Landle (practice)";
   const lines=S.guesses.map(gi=>{ const r=compare(C[gi],a); return r.win?"🟩🟩🟩🟩🟩 🎯":r.cells.slice(0,5).map(c=>c.e).join("")+" "+ARROW_EMOJI[r.d]; });
-  return `${tag} ${S.status==="won"?S.guesses.length:"X"}/${MAXG}\n${lines.join("\n")}\nlandle.io`;
+  return `${tag} ${S.status==="won"?S.guesses.length:"X"}/${MAXG} · ${LEVELS[S.lv].name}\n${lines.join("\n")}\nlandle.io`;
 }
 function wire(){
   $("copy").onclick=async()=>{ try{ await navigator.clipboard.writeText(shareText()); $("copy").textContent="Copied"; }catch(e){ const r=document.createRange(); r.selectNodeContents($("share")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); $("copy").textContent="Selected, now copy it"; } };
-  $("practice").onclick=()=>{ let i; do{ i=C.findIndex(c=>c.iso===POOL[Math.floor(Math.random()*POOL.length)]); }while(i===S.ans); start("practice",0,i); };
+  $("practice").onclick=()=>{ let i; do{ const iso=POOL[Math.floor(Math.random()*POOL.length)]; i=C.findIndex(c=>c.iso===iso); }while(i===S.ans); start("practice",0,i); };
   if($("daily")) $("daily").onclick=()=>start("daily",dayNum());
 }
 function renderStats(){
@@ -147,7 +158,19 @@ $("form").addEventListener("submit",e=>{ e.preventDefault(); if(sel>=0&&opts[sel
 start("daily",dayNum());
 
 // ---------- start screen ----------
-const today=load().days[dayNum()];
-$("play").textContent=!today?"Play":today.status==="playing"?"Continue":"See today's result";
-$("today").textContent=`No. ${dayNum()} · ${new Date().toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"})}`;
-$("play").onclick=()=>{ $("splash").hidden=true; $("game").hidden=false; if(S.status==="playing") $("guess").focus(); };
+function showSplash(){
+  const today=load().days[dayNum()];
+  $("play").textContent=!today?"Play":today.status==="playing"?"Continue":"See today's result";
+  $("today").textContent=`No. ${dayNum()} · ${new Date().toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"})}`;
+  document.querySelector(`input[name="level"][value="${level()}"]`).checked=true;
+  aboutLevel();
+  $("game").hidden=true; $("splash").hidden=false;
+}
+function aboutLevel(){
+  const today=load().days[dayNum()], lv=level(), locked=today&&(today.lv??"normal");
+  $("level-about").textContent=LEVELS[lv].about+(locked&&locked!==lv?` Today's game stays on ${LEVELS[locked].name}; this applies from tomorrow and in practice rounds.`:"");
+}
+$("levels").addEventListener("change",e=>{ const d=load(); d.level=e.target.value; save(d); aboutLevel(); });
+$("play").onclick=()=>{ start("daily",dayNum()); $("splash").hidden=true; $("game").hidden=false; if(S.status==="playing") $("guess").focus(); };
+$("home").onclick=showSplash;
+showSplash();
